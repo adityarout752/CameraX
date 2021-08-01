@@ -1,14 +1,15 @@
-package com.example.camerax
+package com.example.camscanner
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
+
+
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -16,25 +17,22 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.camscanner.R
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class MainActivity : AppCompatActivity() {
+
+class CameraX:AppCompatActivity() {
     private var imageCapture: ImageCapture? = null
 
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
-    // @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        setContentView(R.layout.activity_camera)
         //Request camera permission
         if (allPermissionsGranted()) {
             startCamera()
@@ -81,9 +79,9 @@ class MainActivity : AppCompatActivity() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener(Runnable {
             // Used to bind the lifecycle of cameras to the lifecycle owner
-            val cameraProvider:ProcessCameraProvider=cameraProviderFuture.get()
+            val cameraProvider: ProcessCameraProvider =cameraProviderFuture.get()
             //preview it
-            val preview=Preview.Builder()
+            val preview= Preview.Builder()
                 .build()
                 .also {
                     it.setSurfaceProvider(viewFinder.surfaceProvider)
@@ -103,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }
-        },ContextCompat.getMainExecutor(this))
+        }, ContextCompat.getMainExecutor(this))
     }
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
